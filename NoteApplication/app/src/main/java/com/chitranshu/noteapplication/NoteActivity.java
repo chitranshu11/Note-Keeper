@@ -11,8 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
+    public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
-    private boolean mIsNewNOte;
+    private boolean mIsNewNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class NoteActivity extends AppCompatActivity {
         EditText textNoteTitle = findViewById(R.id.text_note_title);
         EditText textNoteText = findViewById(R.id.text_note_text);
 
-        if(!mIsNewNOte)
+        if(!mIsNewNote)
             displayNote(spinner_category, textNoteTitle, textNoteText);
     }
 
@@ -46,7 +47,11 @@ public class NoteActivity extends AppCompatActivity {
 
     private void readIntentData() {
         Intent intent = getIntent();
-        mNote = intent.getParcelableExtra(NoteListActivity.NOTE_INFO);
-        mIsNewNOte = mNote == null;
+//        mNote = intent.getParcelableExtra(NoteListActivity.NOTE_INFO);
+        int position = intent.getIntExtra(NoteListActivity.NOTE_POSITION, POSITION_NOT_SET);
+        mIsNewNote = position == POSITION_NOT_SET;
+
+        if(!mIsNewNote)
+            mNote = DataManager.getInstance().getNotes().get(position);
     }
 }
