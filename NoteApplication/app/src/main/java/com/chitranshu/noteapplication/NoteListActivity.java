@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
+    public static final String NOTE_INFO = "NOTE_INFO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,11 @@ public class NoteListActivity extends AppCompatActivity {
             }
         });
 
-        loadData();
+        loadListData();
     }
 
-    private void loadData() {
-        ListView note_list_view = findViewById(R.id.note_list);
+    private void loadListData() {
+        final ListView note_list_view = findViewById(R.id.note_list);
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
         ArrayAdapter<NoteInfo> noteInfoArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
@@ -48,6 +49,8 @@ public class NoteListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+                NoteInfo note = (NoteInfo) note_list_view.getItemAtPosition(position);
+                intent.putExtra(NOTE_INFO, note);
                 startActivity(intent);
             }
         });

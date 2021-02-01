@@ -1,6 +1,9 @@
 package com.chitranshu.noteapplication;
 
-public final class NoteInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public final class NoteInfo implements Parcelable {
     private CategoryInfo mCategory;
     private String mTitle;
     private String mText;
@@ -9,6 +12,13 @@ public final class NoteInfo {
         mCategory = category;
         mTitle = title;
         mText = text;
+    }
+
+    private NoteInfo(Parcel parcel) {
+        //In the order of writeParcel
+        mCategory = parcel.readParcelable(CategoryInfo.class.getClassLoader());
+        mTitle = parcel.readString();
+        mText = parcel.readString();
     }
 
     public CategoryInfo getCategory() {
@@ -58,5 +68,31 @@ public final class NoteInfo {
     public String toString() {
         return getCompareKey();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(mCategory,0);
+        parcel.writeString(mTitle);
+        parcel.writeString(mText);
+    }
+
+    public static final Parcelable.Creator<NoteInfo> CREATOR =
+            new Creator<NoteInfo>() {
+                @Override
+                public NoteInfo createFromParcel(Parcel source) {
+                    //Must be set in the order of wiritten
+                    return new NoteInfo(source);
+                }
+
+                @Override
+                public NoteInfo[] newArray(int size) {
+                    return new NoteInfo[size];
+                }
+            };
 
 }
